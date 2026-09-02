@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AtivosRouteImport } from './routes/ativos'
 import { Route as ContratosRouteImport } from './routes/contratos'
 import { Route as PatioRouteImport } from './routes/patio'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AtivosRoute = AtivosRouteImport.update({
+  id: '/ativos',
+  path: '/ativos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContratosRoute = ContratosRouteImport.update({
@@ -31,30 +37,34 @@ const PatioRoute = PatioRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ativos': typeof AtivosRoute
   '/contratos': typeof ContratosRoute
   '/patio': typeof PatioRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ativos': typeof AtivosRoute
   '/contratos': typeof ContratosRoute
   '/patio': typeof PatioRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ativos': typeof AtivosRoute
   '/contratos': typeof ContratosRoute
   '/patio': typeof PatioRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/contratos' | '/patio'
+  fullPaths: '/' | '/ativos' | '/contratos' | '/patio'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/contratos' | '/patio'
-  id: '__root__' | '/' | '/contratos' | '/patio'
+  to: '/' | '/ativos' | '/contratos' | '/patio'
+  id: '__root__' | '/' | '/ativos' | '/contratos' | '/patio'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AtivosRoute: typeof AtivosRoute
   ContratosRoute: typeof ContratosRoute
   PatioRoute: typeof PatioRoute
 }
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ativos': {
+      id: '/ativos'
+      path: '/ativos'
+      fullPath: '/ativos'
+      preLoaderRoute: typeof AtivosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contratos': {
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AtivosRoute: AtivosRoute,
   ContratosRoute: ContratosRoute,
   PatioRoute: PatioRoute,
 }
