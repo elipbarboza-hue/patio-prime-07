@@ -72,8 +72,14 @@ function ContratosPage() {
 
   function bipar(code: string) {
     const e = buscarEquipamento(code);
-    if (!e) return toast.error("Equipamento não encontrado");
-    if (e.status !== "DISPONIVEL") return toast.error(`${e.patrimonio_code} está ${e.status}`);
+    if (!e) {
+      toast.error("Equipamento não encontrado");
+      return;
+    }
+    if (e.status !== "DISPONIVEL") {
+      toast.error(`${e.patrimonio_code} está ${e.status}`);
+      return;
+    }
     addItem(e.id);
     toast.success(`${e.patrimonio_code} adicionado`);
   }
@@ -150,7 +156,10 @@ function ContratosPage() {
                 variant="secondary"
                 className="mt-3 h-12 gap-2"
                 onClick={() => {
-                  if (!novo.nome.trim() || !novo.doc.trim()) return toast.error("Informe nome e documento");
+                  if (!novo.nome.trim() || !novo.doc.trim()) {
+                    toast.error("Informe nome e documento");
+                    return;
+                  }
                   const c = addCliente({
                     nome_razao_social: novo.nome.trim(),
                     documento: novo.doc.trim(),
@@ -365,7 +374,10 @@ function ContratosPage() {
               <Button
                 className="h-16 w-full bg-success text-base font-bold text-success-foreground hover:bg-success/90"
                 onClick={() => {
-                  if (sigRef.current?.isEmpty()) return toast.error("Colete a assinatura do cliente");
+                  if (sigRef.current?.isEmpty()) {
+                    toast.error("Colete a assinatura do cliente");
+                    return;
+                  }
                   assinarContrato(contrato.id, sigRef.current?.toDataURL() ?? null);
                   toast.success("Contrato assinado e ativado");
                 }}

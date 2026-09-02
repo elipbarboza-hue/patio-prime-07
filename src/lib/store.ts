@@ -77,8 +77,21 @@ export interface Faturamento {
   codigo_pix_simulado: string;
 }
 
+export type Perfil = "ADMIN" | "OPERADOR_PATIO";
+
+export interface Usuario {
+  id: string;
+  nome: string;
+  email: string;
+  telefone: string;
+  cargo: string;
+  perfil: Perfil;
+  status: "ATIVO" | "INATIVO";
+}
+
 export interface DB {
   locadora: Locadora;
+  usuarios: Usuario[];
   equipamentos: Equipamento[];
   clientes: Cliente[];
   contratos: Contrato[];
@@ -86,6 +99,7 @@ export interface DB {
   vistorias: Vistoria[];
   faturamentos: Faturamento[];
 }
+
 
 const uid = () => Math.random().toString(36).slice(2, 10);
 const day = 86400000;
@@ -204,7 +218,37 @@ function seed(): DB {
       telefone: "(11) 4002-8922",
       endereco: "Rod. dos Bandeirantes, km 32 - Galpão 4",
     },
+    usuarios: [
+      {
+        id: "usr1",
+        nome: "Eliane Barboza",
+        email: "eliane@patioforte.com.br",
+        telefone: "5511990001111",
+        cargo: "Proprietária",
+        perfil: "ADMIN",
+        status: "ATIVO",
+      },
+      {
+        id: "usr2",
+        nome: "Marcos Souza",
+        email: "marcos@patioforte.com.br",
+        telefone: "5511990002222",
+        cargo: "Encarregado de Pátio",
+        perfil: "OPERADOR_PATIO",
+        status: "ATIVO",
+      },
+      {
+        id: "usr3",
+        nome: "Rafael Lima",
+        email: "rafael@patioforte.com.br",
+        telefone: "5511990003333",
+        cargo: "Conferente",
+        perfil: "OPERADOR_PATIO",
+        status: "INATIVO",
+      },
+    ],
     equipamentos,
+
     clientes,
     contratos,
     itens,
@@ -453,6 +497,32 @@ export function gerarFatura(contratoId: string) {
 export function marcarPago(faturaId: string) {
   db.faturamentos = db.faturamentos.map((f) =>
     f.id === faturaId ? { ...f, status_pagamento: "PAGO" as PagamentoStatus } : f,
+  );
+  emit();
+}
+
+/* ---------- usuários ---------- */
+
+export function addUsuario(u: Omit<Usuario, "id">) {
+  const usuario: Usuario = { ...u, id: uid() };
+  db.usuarios = [...db.usuarios, usuario];
+  emit();
+  return usuario;
+}
+
+export function importUsuarios(rows: Omit<Usuario, "id">[]) {
+  db.usuarios = [...db.usuarios, ...rows.map((r) => ({ ...r, id: uid() }))];
+  emit();
+}
+
+export function updateUsuario(id: string, patch: Partial<Usuario>) {
+  db.usuarios = db.usuarios.map((u) => (u.id === id ? { ...u, ...patch } : u));
+  emit();
+}
+
+export function toggleUsuarioStatus(id: string) {
+  db.usuarios = db.usuarios.map((u) =>
+    u.id === id ? { ...u, status: u.status === "ATIVO" ? "INATIVO" : "ATIVO" } : u,
   );
   emit();
 }

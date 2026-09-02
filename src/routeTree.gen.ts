@@ -10,11 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AtivosRouteImport } from './routes/ativos'
 import { Route as ContratosRouteImport } from './routes/contratos'
+import { Route as PatioRouteImport } from './routes/patio'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AtivosRoute = AtivosRouteImport.update({
+  id: '/ativos',
+  path: '/ativos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContratosRoute = ContratosRouteImport.update({
@@ -22,31 +29,44 @@ const ContratosRoute = ContratosRouteImport.update({
   path: '/contratos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PatioRoute = PatioRouteImport.update({
+  id: '/patio',
+  path: '/patio',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ativos': typeof AtivosRoute
   '/contratos': typeof ContratosRoute
+  '/patio': typeof PatioRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ativos': typeof AtivosRoute
   '/contratos': typeof ContratosRoute
+  '/patio': typeof PatioRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ativos': typeof AtivosRoute
   '/contratos': typeof ContratosRoute
+  '/patio': typeof PatioRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/contratos'
+  fullPaths: '/' | '/ativos' | '/contratos' | '/patio'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/contratos'
-  id: '__root__' | '/' | '/contratos'
+  to: '/' | '/ativos' | '/contratos' | '/patio'
+  id: '__root__' | '/' | '/ativos' | '/contratos' | '/patio'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AtivosRoute: typeof AtivosRoute
   ContratosRoute: typeof ContratosRoute
+  PatioRoute: typeof PatioRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +78,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ativos': {
+      id: '/ativos'
+      path: '/ativos'
+      fullPath: '/ativos'
+      preLoaderRoute: typeof AtivosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contratos': {
       id: '/contratos'
       path: '/contratos'
@@ -65,12 +92,21 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContratosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/patio': {
+      id: '/patio'
+      path: '/patio'
+      fullPath: '/patio'
+      preLoaderRoute: typeof PatioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AtivosRoute: AtivosRoute,
   ContratosRoute: ContratosRoute,
+  PatioRoute: PatioRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
