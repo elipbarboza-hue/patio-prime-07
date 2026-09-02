@@ -500,3 +500,29 @@ export function marcarPago(faturaId: string) {
   );
   emit();
 }
+
+/* ---------- usuários ---------- */
+
+export function addUsuario(u: Omit<Usuario, "id">) {
+  const usuario: Usuario = { ...u, id: uid() };
+  db.usuarios = [...db.usuarios, usuario];
+  emit();
+  return usuario;
+}
+
+export function importUsuarios(rows: Omit<Usuario, "id">[]) {
+  db.usuarios = [...db.usuarios, ...rows.map((r) => ({ ...r, id: uid() }))];
+  emit();
+}
+
+export function updateUsuario(id: string, patch: Partial<Usuario>) {
+  db.usuarios = db.usuarios.map((u) => (u.id === id ? { ...u, ...patch } : u));
+  emit();
+}
+
+export function toggleUsuarioStatus(id: string) {
+  db.usuarios = db.usuarios.map((u) =>
+    u.id === id ? { ...u, status: u.status === "ATIVO" ? "INATIVO" : "ATIVO" } : u,
+  );
+  emit();
+}
