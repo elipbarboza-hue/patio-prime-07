@@ -77,8 +77,21 @@ export interface Faturamento {
   codigo_pix_simulado: string;
 }
 
+export type Perfil = "ADMIN" | "OPERADOR_PATIO";
+
+export interface Usuario {
+  id: string;
+  nome: string;
+  email: string;
+  telefone: string;
+  cargo: string;
+  perfil: Perfil;
+  status: "ATIVO" | "INATIVO";
+}
+
 export interface DB {
   locadora: Locadora;
+  usuarios: Usuario[];
   equipamentos: Equipamento[];
   clientes: Cliente[];
   contratos: Contrato[];
@@ -86,6 +99,7 @@ export interface DB {
   vistorias: Vistoria[];
   faturamentos: Faturamento[];
 }
+
 
 const uid = () => Math.random().toString(36).slice(2, 10);
 const day = 86400000;
