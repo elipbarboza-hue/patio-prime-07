@@ -38,6 +38,16 @@ import {
   type Equipamento,
 } from "@/lib/store";
 
+interface Recibo {
+  equip: Equipamento;
+  contratoNumero: string;
+  cliente: string;
+  whatsapp: string;
+  comAvaria: boolean;
+  taxa: number;
+  data: string;
+}
+
 export function PatioView() {
   const db = useDB();
   const [termo, setTermo] = useState("");
